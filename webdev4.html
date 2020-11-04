@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Leaflet Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+     <style>
+        body {     padding: 0;    margin: 0; }
+        html, body, #map {     height: 100%;    width: 100%;      }
+    </style>
+    <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+</head>
+<body>
+    <header id="header">
+        <h2>A Leaflet map </h2>
+        <h3><a href="https://leafletjs.com" target="_blank">I built this with leaflet</a></h3>
+        <h5 class="right">GIS4533 | Fall 2020 | Mathew Becker</h5>
+    </header>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <div id="map" style="position: relative;"></div>
+    
+    <script src="election.geojson"></script>
+    <script>
+    // Create variable to hold map element, give initial settings to map
+    var map = L.map('map',{ center: [46.7867, -92.1005], zoom: 11});
+       
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+     //Where I add my airport csv using omnivore
+        omnivore.csv('/airports.csv').addTo(map);
+        
+        var myDataPoint1 = L.marker([46.779497, -92.093210]).addTo(map);
+        // Create line feature for Aerial lift bridge, style and add to map
+        myDataPoint1.bindPopup("This is the Duluth Aerial Lift Bridge.");
+        // Bind popup to data point object
+        
+        var myDataPoint2 = L.marker([46.816914, -92.085174]).addTo(map);
+        // Create line feature for UMD, style and add to map
+        myDataPoint2.bindPopup("This is the University of Minnesota Duluth.");
+        // Bind popup to data point object
+      
+          var myDataPoint3 = L.marker([46.717855, -92.217010]).addTo(map);
+        // Create line feature for Spirit Mountain, style and add to map
+        myDataPoint3.bindPopup("This is Spirit Mountain. A ski and snowboard destination.");
+        // Bind popup to data point object
+        
+        // Create an Empty Popup
+        var popup = L.popup();
+
+        // Write function to set Properties of the Popup
+        function onMapClick(e) {
+            popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(map); }
+        // Listen for a click event on the Map element
+        map.on('click', onMapClick);
+        
+      //add lat and long for mouse coordinate on when clicking on a location.
+        var lat, lng;
+
+map.addEventListener('mousemove', function(ev) {
+   lat = ev.latlng.lat;
+   lng = ev.latlng.lng;
+});
+
+document.getElementById("transitmap").addEventListener("contextmenu", function (event) {
+    // Prevent the browser's context menu from appearing
+    event.preventDefault();
+
+    // Add marker
+    // L.marker([lat, lng], ....).addTo(map);
+    alert(lat + ' - ' + lng);
+
+    return false; // To disable default popup.
+});
+        
+        
+        // load GeoJSON from an external file        
+$.getJSON("election.geojson",function(data){
+
+    // add GeoJSON layer to the map once the file is loaded
+    L.geoJson(data,{
+        style: function (feature) {
+
+            // calculate third party percent of vote using function
+            var thirdPartyPct = calculateThirdPartyPct(feature);
+
+            // assign colors from the ColorBrewer yellow-green scale
+            var fill;
+            // equal interval classification
+            // 7% or less
+            if (thirdPartyPct <= 7) {
+                fill = '#f7fcb9';
+            }
+            // 11% or less
+            else if (thirdPartyPct <= 11) {
+                fill = '#addd8e';
+            }
+            // 12% or more
+            else {
+                fill = '#31a354';
+            }
+
+            // FIXME: remove existing symbolization and create a diverging
+            // symbology based the democrat or republic vote as a percent
+            // of the total vote.
+            // Use Colorbrewer's 5-class Red-Blue colors for this
+            // http://colorbrewer2.org/#type=diverging&scheme=RdBu&n=5
+
+            // return style specification
+            return {
+                color: '#636363',
+                weight: 2,
+                fillColor: fill,
+                fillOpacity: 0.7
+            }
+        },
+
+        // do something to each feature
+        // in this case create a popup
+        onEachFeature: function (feature, layer) {
+            var thirdPartyPct = calculateThirdPartyPct(feature);
+            // show name of precinct and third party percent in popup
+            layer.bindPopup(
+                "<h3>" + feature.properties.PCTNAME + "</h3>" +
+                "<p>Third Party Vote: " + thirdPartyPct + "%</p>"
+            );
+        }
+    }).addTo(map);
+});	
+
+// a function that takes a feature and returns the percent of the vote
+// that doesn't belong to Republican or Democrat (ie. Third Party)
+function calculateThirdPartyPct(feature) {
+    var demVote = feature.properties.USPRSDFL;
+    var repVote = feature.properties.USPRSR;
+    var totalVote = feature.properties.USPRSTOTAL;
+    // third party vote is whatever is left over from dem and rep vote
+    var thirdPartyVote = (totalVote - demVote - repVote);
+    // calculate as a percent of the total vote
+    var thirdPartyPct = Math.round(thirdPartyVote/totalVote*100);
+    // return the third party percent for this feature
+    return thirdPartyPct;
+}
+        
+    </script>
+      
+</body>
+</html>
