@@ -47,6 +47,20 @@ myDataPoint.bindPopup("<h3>Kendall Square</h3><p>Cambridge, MA<br>Information ab
 myDataLine.bindPopup("Mass Ave Bridge");
 // Bind popup to area object
 myArea.bindPopup("MIT Campus");
+        
+        // Create an Empty Popup
+var popup = L.popup();
+
+// Write function to set Properties of the Popup
+function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(map);
+}
+
+// Listen for a click event on the Map element
+map.on('click', onMapClick);
     </script>
       
 </body>
