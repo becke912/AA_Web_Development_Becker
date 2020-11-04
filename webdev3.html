@@ -32,22 +32,22 @@
      //Where I add my airport csv using omnivore
         omnivore.csv('/airports.csv').addTo(map);
         
-        var myDataPoint = L.marker([42.362432, -71.086086]).addTo(map);
-        // Create line feature for Mass Ave Bridge, style and add to map
-    var myDataLine = L.polyline([[42.357227, -71.092631], [42.351411, -71.089723]],
-    {color: 'red', weight: 10}).addTo(map);
-        // Create area feature for MIT, style and add to map
-    var myArea = L.polygon([[42.353770, -71.103606], [42.355447, -71.104475],
-    [42.362681, -71.089830], [42.361829, -71.079230]],
-    {color: 'blue', weight: 4}).addTo(map);
-        // Bind popup to Data Point object
-myDataPoint.bindPopup("This is Kendall Square.");
+        var myDataPoint1 = L.marker([46.779497, -92.093210]).addTo(map);
+        // Create line feature for Aerial lift bridge, style and add to map
+        myDataPoint1.bindPopup("This is the Duluth Aerial Lift Bridge.");
         // Bind popup to data point object
-myDataPoint.bindPopup("<h3>Kendall Square</h3><p>Cambridge, MA<br>Information about Kendall Square.</p>");
-        // Bind popup to line object
-myDataLine.bindPopup("Mass Ave Bridge");
-// Bind popup to area object
-myArea.bindPopup("MIT Campus");
+        
+        var myDataPoint2 = L.marker([46.816914, -92.085174]).addTo(map);
+        // Create line feature for UMD, style and add to map
+        myDataPoint2.bindPopup("This is the University of Minnesota Duluth.");
+        // Bind popup to data point object
+      
+          var myDataPoint3 = L.marker([46.717855, -92.217010]).addTo(map);
+        // Create line feature for Spirit Mountain, style and add to map
+        myDataPoint3.bindPopup("This is Spirit Mountain. A ski and snowboard destination.");
+        // Bind popup to data point object
+        
+  
         
         // Create an Empty Popup
 var popup = L.popup();
