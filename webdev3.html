@@ -5,14 +5,8 @@
 	<title>Leaflet Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
      <style>
-        body {
-            padding: 0;
-            margin: 0;
-        }
-        html, body, #map {
-            height: 100%;
-            width: 100%;
-        }
+        body {     padding: 0;    margin: 0; }
+        html, body, #map {     height: 100%;    width: 100%;      }
     </style>
     <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
 </head>
@@ -47,21 +41,36 @@
         myDataPoint3.bindPopup("This is Spirit Mountain. A ski and snowboard destination.");
         // Bind popup to data point object
         
-  
-        
         // Create an Empty Popup
-var popup = L.popup();
+        var popup = L.popup();
 
-// Write function to set Properties of the Popup
-function onMapClick(e) {
-    popup
+        // Write function to set Properties of the Popup
+        function onMapClick(e) {
+            popup
         .setLatLng(e.latlng)
         .setContent("You clicked the map at " + e.latlng.toString())
-        .openOn(map);
-}
+        .openOn(map); }
+        // Listen for a click event on the Map element
+        map.on('click', onMapClick);
+        
+      //add lat and long for mouse coordinate on when clicking on a location.
+        var lat, lng;
 
-// Listen for a click event on the Map element
-map.on('click', onMapClick);
+map.addEventListener('mousemove', function(ev) {
+   lat = ev.latlng.lat;
+   lng = ev.latlng.lng;
+});
+
+document.getElementById("transitmap").addEventListener("contextmenu", function (event) {
+    // Prevent the browser's context menu from appearing
+    event.preventDefault();
+
+    // Add marker
+    // L.marker([lat, lng], ....).addTo(map);
+    alert(lat + ' - ' + lng);
+
+    return false; // To disable default popup.
+});
     </script>
       
 </body>
